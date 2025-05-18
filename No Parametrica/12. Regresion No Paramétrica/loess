@@ -1,0 +1,24 @@
+
+
+ISIT <- read.table("ISIT.txt", header = TRUE)
+Sources16<-ISIT$Sources[ISIT$Station==16]
+Depth16<-ISIT$SampleDepth[ISIT$Station==16]
+ISIT = ISIT[ISIT$Station==16,]
+
+par(mfrow=c(2,1))
+
+mloess = loess(Sources~SampleDepth,data=ISIT,degree=2,span=0.1)
+ y.pred = predict(mloess)
+ rk = order(ISIT$SampleDepth)
+ plot(Depth16,Sources16,type="p",main="span=0.1")
+ lines(ISIT$SampleDepth[rk],y.pred[rk],col="red",lwd=2)
+
+Nota: span	numeric parameter between 0 and 1 specifying proportion of data to be used in the local regression 
+      moving window. Larger numbers give smoother fits.
+
+
+mloess = loess(Sources~SampleDepth,data=ISIT,degree=2,span=0.75)
+ y.pred = predict(mloess)
+ rk = order(ISIT$SampleDepth)
+ plot(Depth16,Sources16,type="p",main="span=0.75")
+ lines(ISIT$SampleDepth[rk],y.pred[rk],col="red",lwd=2)

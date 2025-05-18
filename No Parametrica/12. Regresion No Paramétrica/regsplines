@@ -1,0 +1,23 @@
+#--------------------------------
+# Regresión splines
+#---------------------------------
+
+
+library(splines)
+
+ISIT <- read.table("ISIT.txt", header = TRUE)
+Bioluminiscencia<-ISIT$Sources[ISIT$Station==16]
+Profundidad<-ISIT$SampleDepth[ISIT$Station==16]
+base=data.frame(Bioluminiscencia,Profundidad)
+nudos=quantile(Profundidad, p = seq(0.1, 0.9, length=9))
+model <- lm (Bioluminiscencia ~ bs(Profundidad, knots = knots), 
+             data = base)
+plot(Profundidad,Bioluminiscencia, lty=1, main = "Datos de Zuur et al., 2009",
+     ylab = "Bioluminiscencia", xlab = "Profundidad", pch=16)
+
+
+#Grafico usando ggplot
+ggplot(base, aes(Profundidad, Bioluminiscencia) ) +
+  geom_point() +
+  stat_smooth(method = lm, formula = y ~ splines::bs(x, df = 3))
+
